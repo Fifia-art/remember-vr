@@ -1,2 +1,98 @@
-# remember-vr
-Remember — VR Memory Experience
+# Remember
+
+基于所提供 VR 项目概念、用户流程与六个高保真页面实现的交互原型。
+
+**定位：网页端记忆档案 + WebXR 沉浸式照片画廊。** 界面采用英文，与设计稿保持一致。使用原生 JavaScript、IndexedDB、WebGL / WebXR，无第三方运行依赖，无需 API Key。
+
+## 运行与测试
+
+需要 Node.js 20 或更高版本。解压后进入本目录：
+
+```bash
+npm start
+```
+
+打开终端显示的 `http://localhost:4173`。不要直接双击 HTML，ES Modules 和浏览器数据存储需要通过服务器访问。
+
+```bash
+npm run check
+npm test
+```
+
+默认端口 4173，可通过环境变量 PORT 改变。
+
+## 已实现流程
+
+| 页面 | 行为 |
+| --- | --- |
+| Home | 首页、创建记忆、档案与 VR 入口 |
+| Create | 拖放/选择照片、视频、音频；添加标题、日期、类别与文字故事；本地保存 |
+| Memories | Family / Friend / Pet 分类；关键词搜索；收藏；媒体详情与播放；删除 |
+| VR space | 三种氛围预设；3D 照片画廊；桌面拖动；兼容设备的 WebXR 双眼显示 |
+| Profile | 修改显示名称，统计记忆、收藏与关系类别 |
+| More | 声音、动效设置；含媒体的 JSON 备份导出与恢复 |
+| Memory detail | 回顾故事、播放录音/视频、点亮象征性纪念灯光、进入单张记忆体验 |
+
+每次可导入最多 12 个文件，每个文件最多 25 MB。支持 JPEG、PNG、WebP、GIF、MP4、WebM、MP3、WAV、OGG，媒体能否解码仍取决于设备编解码器。
+
+## VR 使用
+
+1. 使用支持 WebXR 的头显浏览器，访问通过 HTTPS 托管的 `dist/` 静态站点。
+2. 进入 **VR space → Step into your memories → Enter with VR headset**。
+3. 在系统提示中启动沉浸会话。转动头部查看照片；主手柄选择键切换当前记忆标题。结束沉浸会话使用头显浏览器的系统退出操作。
+4. 桌面使用拖动视角、左右按钮或键盘左右键浏览。没有 WebGL 时自动使用屏幕画廊模式，不能进入 VR。
+
+说明：本版本为固定观看位置、照片悬挂在空间中的画廊，不包含自动摄影测量、照片生成完整三维场景、逝者数字人、语音克隆、触觉传感器或投影映射硬件。三种氛围是颜色预设，不是三个重建的真实空间；音频和视频在详情页播放，VR 内使用照片/占位材质呈现对应记忆。VR 一次展示前 12 条记忆。
+
+## 数据与备份
+
+- 用户素材保存在**当前浏览器、当前站点来源**的 IndexedDB 中。无登录、云存储、跨设备同步与公开社区。
+- 不同域名、端口、浏览器的档案互不共享；需要通过备份转移。
+- 清除浏览器数据会丢失档案。More → Export 导出完整 JSON；More → Import 恢复，恢复相同 ID 会覆盖旧记录，其他记录保留。
+- 不上传用户素材到 GitHub。不要将私人备份提交到仓库。
+- 首次打开显示明确标注的示例，第一条个人记忆保存后只展示个人集合。
+- 项目背景图为 AI 生成的示意素材，不是用户真实照片。生成提示：安静的暖色客厅、橡木桌、亚麻扶手椅、薰衣草、法式门外的日落湖面、左侧保留暗色文字空间，无人物与文字。
+- 纪念灯光为当前访问的象征性互动，不会创建定时提醒。
+
+## 上传 GitHub
+
+源码仓库：https://github.com/Fifia-art/remember-vr 。GitHub Actions 会在推送后自动检查代码并运行测试。
+若自行上传，可在已经配置好 GitHub 登录的本地终端运行：
+
+```bash
+git remote add origin https://github.com/YOUR_USERNAME/remember-vr.git
+git push -u origin main
+```
+
+替换为实际仓库地址。若解压包未保留 Git 元数据，先执行 `git init -b main`、`git add .`、`git commit -m "Build Remember prototype"`。
+
+仓库根目录包含 `.github/workflows/test.yml`，推送/PR/手动运行会检查 JS 语法、运行测试，并上传可下载的 `dist/` 测试产物。该流程不会自动公开网站，也不会将私人记忆作为产物上传。
+
+需要在线地址时，可将 `dist/` 内容作为静态文件部署；HTTPS 是头显 WebXR 的前提。在 GitHub Pages 上发布可能产生公开访问地址，请根据自己的仓库与访问要求选择。
+
+## 文件结构
+
+```text
+remember/
+  dist/
+    index.html       页面入口
+    style.css        响应式界面与视觉样式
+    app.js           页面、记忆流程、备份、设置
+    store.js         数据校验与 IndexedDB
+    vr.js            WebGL / WebXR 与屏幕兼容画廊
+    assets/room.jpg  本地示意图
+  tests/core.test.mjs
+  server.mjs
+  package.json
+  .github/workflows/test.yml
+```
+
+## 本轮验证情况
+
+- Node 自动测试 4 项通过：文件类型/大小限制、组合搜索、记忆字段校验、VR 矩阵与位置计算。
+- 所有 JS 文件语法检查通过。
+- 浏览器实测：创建文字记忆、收藏并刷新保留、搜索无结果、VR 入口与 WebGL 不可用时的兼容画廊、退出体验。
+- 当前测试浏览器无法创建 WebGL 上下文；真实 GPU 渲染、双眼显示和手柄交互尚未完成头显实机验证。
+- GitHub 测试状态请以仓库 Actions 页面中的实际运行结果为准。
+
+这是可继续开发的作品集演示原型，不是完整商业系统或心理治疗服务。
