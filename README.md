@@ -54,21 +54,6 @@ npm test
 - 项目背景图为 AI 生成的示意素材，不是用户真实照片。生成提示：安静的暖色客厅、橡木桌、亚麻扶手椅、薰衣草、法式门外的日落湖面、左侧保留暗色文字空间，无人物与文字。
 - 纪念灯光为当前访问的象征性互动，不会创建定时提醒。
 
-## 上传 GitHub
-
-源码仓库：https://github.com/Fifia-art/remember-vr 。GitHub Actions 会在推送后自动检查代码并运行测试。
-若自行上传，可在已经配置好 GitHub 登录的本地终端运行：
-
-```bash
-git remote add origin https://github.com/YOUR_USERNAME/remember-vr.git
-git push -u origin main
-```
-
-替换为实际仓库地址。若解压包未保留 Git 元数据，先执行 `git init -b main`、`git add .`、`git commit -m "Build Remember prototype"`。
-
-仓库根目录包含 `.github/workflows/test.yml`，推送/PR/手动运行会检查 JS 语法、运行测试，并上传可下载的 `dist/` 测试产物。该流程不会自动公开网站，也不会将私人记忆作为产物上传。
-
-需要在线地址时，可将 `dist/` 内容作为静态文件部署；HTTPS 是头显 WebXR 的前提。在 GitHub Pages 上发布可能产生公开访问地址，请根据自己的仓库与访问要求选择。
 
 ## 文件结构
 
